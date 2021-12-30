@@ -31,10 +31,13 @@ while True:
     aligned_frames = align.process(frames)
 
     color_frame = aligned_frames.get_color_frame()
+    depth_frame = aligned_frames.get_depth_frame()
     color_image = np.asanyarray(color_frame.get_data())
+    depth_image = np.asanyarray(depth_frame.get_data())
 
-    cv2.namedWindow('color image', cv2.WINDOW_AUTOSIZE)
-    cv2.imshow('color image', cv2.cvtColor(color_image, cv2.COLOR_RGB2BGR))
+    depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.04), cv2.COLORMAP_JET)
+    cv2.imshow("RealSense  Color Image", color_image)
+    cv2.imshow("RealSense  Depth Image", depth_colormap)
 
     if cv2.waitKey(1) != -1:
         print('finish')
@@ -45,7 +48,7 @@ depth = o3d.geometry.Image(np.asanyarray(depth_frame.get_data()))
 color = o3d.geometry.Image(color_image)
 
 rgbd = o3d.geometry.RGBDImage.create_from_color_and_depth(color, depth)
-pcd = o3d.geometry.PointCloud.create_from_rgbd_image(rgbd, pinhole_camera_intrinsic)                                                   
+pcd = o3d.geometry.PointCloud.create_from_rgbd_image(rgbd, pinhole_camera_intrinsic)                          
 pcd.transform([[1,0,0,0],[0,-1,0,0],[0,0,-1,0],[0,0,0,1]])
 
 pipeline.stop()
@@ -54,16 +57,16 @@ pcd = pcd.voxel_down_sample(voxel_size=0.001)
 all_points = []
 all_colors = []
 for p, c in zip(pcd.points, pcd.colors):
-    flag = [False, False, False]
-    if c[0] > 0.2 and c[0] < 0.5:
-        flag[0] = True
-    if c[1] > 0.2 and c[1] < 0.5:
-        flag[1] = True
-    if c[2] > 0.2 and c[2] < 0.5:
-        flag[2] = True
-    if flag[0] and flag[1] and flag[2]:
-        all_points.append(p)
-        all_colors.append(c)
+    # flag = [False, False, False]
+    # if c[0] > 0.6 and c[0] < 0.8:
+    #     flag[0] = True
+    # if c[1] > 0.6 and c[1] < 0.8:
+    #     flag[1] = True
+    # if c[2] > 0.6 and c[2] < 0.8:
+    #     flag[2] = True
+    # if flag[0] and flag[1] and flag[2]:
+    all_points.append(p)
+    all_colors.append(c)
 
 selected_pcd = o3d.geometry.PointCloud()
 selected_pcd.points = o3d.utility.Vector3dVector(all_points)

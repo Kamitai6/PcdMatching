@@ -1,9 +1,6 @@
 import copy
 import numpy as np
 import open3d as o3d
-# from open3d.pipelines.registration import registration_ransac_based_on_feature_matching as RANSAC
-# from open3d.pipelines.registration import registration_icp as ICP
-# from open3d.pipelines.registration import compute_fpfh_feature as FPFH
 
 
 def show(model, scene, model_to_scene_trans=np.identity(4)):
@@ -17,7 +14,7 @@ def show(model, scene, model_to_scene_trans=np.identity(4)):
 
     o3d.visualization.draw_geometries([model_t, scene_t])
 
-scene = o3d.io.read_point_cloud('./rs_color.pcd', remove_nan_points = True, remove_infinite_points = True, print_progress = True)
+scene = o3d.io.read_point_cloud('./RS_DBSCAN.pcd', remove_nan_points = True, remove_infinite_points = True, print_progress = True)
 model = o3d.io.read_point_cloud('./g_code.pcd', remove_nan_points = True, remove_infinite_points = True, print_progress = True)
 
 size = np.abs((model.get_max_bound() - model.get_min_bound())).max() / 10

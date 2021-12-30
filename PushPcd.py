@@ -13,7 +13,6 @@ line_bank = []
 parsed_Num_of_layers = 0
 gcode_type = 0
 
-
 def display_inlier_outlier(cloud, ind):
     inlier_cloud = cloud.select_by_index(ind)
     outlier_cloud = cloud.select_by_index(ind, invert=True)
@@ -24,7 +23,7 @@ def display_inlier_outlier(cloud, ind):
     o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])
     return inlier_cloud
 
-with open('./CE3_Part2.gcode', 'r') as fh:
+with open('./CE3_Stanford_Bunny.gcode', 'r') as fh:
     layer_start = False
     for line_text in fh.readlines():
         line = Line(line_text)
@@ -78,7 +77,6 @@ sphere_np = np.array(sphere)
 
 pcd = o3d.geometry.PointCloud()
 pcd.points = o3d.utility.Vector3dVector(sphere_np)
-# pcd.estimate_normals(search_param = o3d.geometry.KDTreeSearchParamHybrid(radius=0.1, max_nn=30))
 
 pcd = pcd.voxel_down_sample(voxel_size=0.001)
 
