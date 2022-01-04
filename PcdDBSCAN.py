@@ -66,12 +66,13 @@ for label in unique_labels:
             opacity=0.8
         )
     )
-    zobject = {str(label) : np.mean(x[:, 2])}
+    print(np.sqrt(x[:, 0]**2 + x[:, 1]**2))
+    zobject = {str(label) : np.mean(np.sqrt(x[:, 0]**2 + x[:, 1]**2))}
     print('z-mean: {}'.format(zobject))
     zobjects.update(zobject)
     data.append(trace)
 
-godlabel = max(zobjects, key=zobjects.get)
+godlabel = min(zobjects, key=zobjects.get)
 print('z-max: {}'.format(godlabel))
 
 x = vectorized[np.where(dbscan.labels_==int(godlabel))]
