@@ -30,7 +30,7 @@ plt.show()
 pcd = o3d.geometry.PointCloud.create_from_rgbd_image(
     rgbd_image,
     o3d.camera.PinholeCameraIntrinsic(
-        o3d.camera.PinholeCameraIntrinsicParameters.PrimeSenseDefault))
+        1344, 756, 340, 370, 672, 378))
 pcd.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
 o3d.visualization.draw_geometries([pcd])
 
