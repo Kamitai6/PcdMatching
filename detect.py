@@ -228,7 +228,9 @@ def detect_feature(img, edges, num):
     for label in unique_labels:
         if label == -1: continue
         x = data_norm[np.where(dbscan.labels_==label)]
-        if np.abs((max(x[:, 0]) - min(x[:, 0])) * (max(x[:, 1]) - min(x[:, 1]))) > img.shape[0]*img.shape[1]*rate:
+        what = np.abs((max(x[:, 0]) - min(x[:, 0])) * (max(x[:, 1]) - min(x[:, 1])))
+        if what > img.shape[0]*img.shape[1]*rate:
+            print(what)
             spag = True
         plt.scatter(x[:, 0], x[:, 1], label=label)
     plt.legend()
@@ -334,7 +336,6 @@ def detection(depth_image, color_image, intr, pinhole, scale, num):
 
 def pipe():
     num = 0
-    align = rs.align(rs.stream.color)
     pipeline = rs.pipeline()
     config = rs.config()
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
@@ -355,13 +356,8 @@ def pipe():
     
     try:
         while True:
-            frames = pipeline.wait_for_frames()
-            aligned_frames = align.process(frames)
-            depth_frame = aligned_frames.get_depth_frame()
-            color_frame = aligned_frames.get_color_frame()
-
-            depth_image = np.asanyarray(depth_frame.get_data())
-            color_image = np.asanyarray(color_frame.get_data())
+            depth_image = np.asanyarray(cv2.imread("./depth.png", 0))
+            color_image = np.asanyarray(cv2.imread("./color.png"))
 
             detection(depth_image, color_image, intr, pinhole_camera_intrinsic, depth_scale, num)
             num+=1
